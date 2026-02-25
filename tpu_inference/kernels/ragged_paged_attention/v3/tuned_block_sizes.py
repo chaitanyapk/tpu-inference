@@ -33,7 +33,7 @@ logger = init_logger(__name__)
 TUNED_BLOCK_SIZES = {
     'TPU v7': {
         16: {
-            'q_bfloat16_kv_bfloat16': {
+            'q_bfloat16_kv_float8_e4m3fn': {
                 'q_head-8_kv_head-2_head-128': {
                     'max_model_len-16384-sw-None': (128, 256),
                 },
