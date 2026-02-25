@@ -159,16 +159,36 @@ class VllmModelWrapper:
 
         use_random_weights = (
             vllm_config_for_load.load_config.load_format == "dummy")
+
+
         if use_random_weights:
             logger.info(
-                "Initializing vLLM model with random weights, weight loading skipped."
+                "Initializing vLLM model with dummy weights, weight loading skipped."
             )
-        # The DummyModelLoader in vLLM calls torch._sync for torch_xla path when
-        # it detects the tpu platform, but we don't need it and it causes crash
-        # without proper setup.
-        load_context = patch(
-            "torch._sync",
-            return_value=None) if use_random_weights else nullcontext()
+            import contextlib
+            import vllm.model_executor.model_loader.weight_utils as weight_utils
+            orig_dummy_init = weight_utils.initialize_single_dummy_weight
+
+            @contextlib.contextmanager
+            def dummy_fp8_context():
+                def safe_dummy_init(param, *args, **kwargs):
+                    if getattr(param, "dtype", None) == getattr(torch, "float8_e4m3fn", None):
+                        # PyTorch RNG does not support FP8.
+                        # Initialize with zeros using a safe float32 cast to bypass the crash.
+                        zeros = torch.zeros(param.shape, dtype=torch.float32, device=param.device)
+                        param.data.copy_(zeros.to(param.dtype))
+                    else:
+                        # Fallback to standard vLLM dummy logic for non-FP8 parameters
+                        orig_dummy_init(param, *args, **kwargs)
+
+                # Intercept the dummy weight function right before it's called
+                with patch("torch._sync", return_value=None), \
+                     patch("vllm.model_executor.model_loader.weight_utils.initialize_single_dummy_weight", safe_dummy_init):
+                    yield
+
+            load_context = dummy_fp8_context()
+        else:
+            load_context = nullcontext()
 
         # By default load weights to the CPU device first. If we are running
         # under Pathways, this would cause weights to be loaded on a CPU-only
@@ -176,6 +196,48 @@ class VllmModelWrapper:
         jax_context = jax.default_device(
             jax.devices("cpu")
             [0]) if not vllm_envs.VLLM_TPU_USING_PATHWAYS else nullcontext()
+
+
+        # --- NEW CODE START ---
+        import contextlib
+        import vllm.model_executor.model_loader.default_loader as default_loader
+
+        @contextlib.contextmanager
+        def fp8_checkpoint_mapping_patch():
+            orig_get_all_weights = default_loader.DefaultModelLoader.get_all_weights
+
+            def patched_get_all_weights(loader_self, *args, **kwargs):
+                weights_iterator = orig_get_all_weights(loader_self, *args, **kwargs)
+                for name, tensor in weights_iterator:
+
+                    # 1. MoE scales: Fp8MoEMethod registers w13_weight_scale and w2_weight_scale
+                    if "w1_weight.scale" in name:
+                        name = name.replace("w1_weight.scale", "w1_weight_scale")
+                    elif "w3_weight.scale" in name:
+                        name = name.replace("w3_weight.scale", "w3_weight_scale")
+                    elif "w2_weight.scale" in name:
+                        name = name.replace("w2_weight.scale", "w2_weight_scale")
+
+                    # 2. Linear scales: Fp8LinearMethod registers weight_scale inside the submodules
+                    elif ".scale" in name:
+                        name = name.replace(".scale", ".weight_scale")
+
+                    # 3. Handle alternative block-quant suffix just in case
+                    elif ".weight_scale_inv" in name:
+                        if "w1_weight" in name or "w2_weight" in name or "w3_weight" in name:
+                            name = name.replace(".weight_scale_inv", "_weight_scale")
+                        else:
+                            name = name.replace(".weight_scale_inv", ".weight_scale")
+
+                    yield name, tensor
+
+            default_loader.DefaultModelLoader.get_all_weights = patched_get_all_weights
+            try:
+                yield
+            finally:
+                default_loader.DefaultModelLoader.get_all_weights = orig_get_all_weights
+        # --- NEW CODE END ---
+
 
         # Load the vLLM model and wrap it into a new model whose forward
         # function can calculate the hidden_state and logits.
