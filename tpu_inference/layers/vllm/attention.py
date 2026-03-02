@@ -89,8 +89,6 @@ class PallasAttentionBackend(AttentionBackend):
         # For long model length, we use 16 page-size to avoid too much
         # VMEM spill. A more robust solution should be implemented to
         # handle VREG spills.
-        if vllm_config.model_config.max_model_len > 8192:
-            return 16
         page_size = next_power_of_2(
             vllm_config.model_config.max_model_len) // 16
         if page_size <= 16:
