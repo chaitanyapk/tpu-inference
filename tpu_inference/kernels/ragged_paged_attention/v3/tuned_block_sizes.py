@@ -32,1521 +32,7953 @@ logger = init_logger(__name__)
 #   - (num_kv_pages_per_block, num_queries_per_block)
 TUNED_BLOCK_SIZES = {
     'TPU v7': {
-        16: {
-            'q_bfloat16_kv_float8_e4m3fn': {
-                'q_head-8_kv_head-2_head-128': {
-                    'max_model_len-16384-sw-None': (128, 256),
-                },
-            },
+  "128": {
+    "q_bfloat16_kv_bfloat16": {
+      "q_head-128_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
         },
-        128: {
-            'q_bfloat16_kv_float8_e4m3fn': {
-                'q_head-8_kv_head-4_head-256': {
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-8192-sw-None': (32, 64),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                },
-                'q_head-16_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                },
-                'q_head-32_kv_head-16_head-256': {
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                },
-                'q_head-32_kv_head-2_head-256': {
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                },
-                'q_head-64_kv_head-2_head-128': {
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-16_head-128': {
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (32, 8),
-                    'max_model_len-128-sw-None': (1, 16),
-                },
-                'q_head-128_kv_head-8_head-256': {
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                },
-                'q_head-4_kv_head-2_head-256': {
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (4, 64),
-                },
-                'q_head-128_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 8),
-                },
-                'q_head-128_kv_head-16_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-32_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-8_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 64),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-8_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-16_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-2_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-512-sw-None': (4, 128),
-                    'max_model_len-1024-sw-None': (8, 128),
-                    'max_model_len-2048-sw-None': (16, 64),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-16_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-32_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-16_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-32_kv_head-16_head-128': {
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-2_head-128': {
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-128_kv_head-8_head-128': {
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                },
-                'q_head-128_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 8),
-                },
-                'q_head-16_kv_head-8_head-128': {
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 64),
-                },
-                'q_head-64_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-16_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-32_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-8_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-2_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-128_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-4_kv_head-2_head-128': {
-                    'max_model_len-1024-sw-None': (8, 128),
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-512-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (16, 128),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-16_kv_head-8_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-32_kv_head-8_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-128_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-8_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-32_kv_head-8_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-            },
-            'q_bfloat16_kv_bfloat16': {
-                'q_head-8_kv_head-2_head-128': {
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                },
-                'q_head-16_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-16_kv_head-8_head-256': {
-                    'max_model_len-8192-sw-None': (16, 64),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (16, 64),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                },
-                'q_head-32_kv_head-1_head-256': {
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                },
-                'q_head-32_kv_head-8_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (8, 32),
-                    'max_model_len-8192-sw-None': (8, 32),
-                },
-                'q_head-64_kv_head-1_head-128': {
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-8_head-128': {
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 16),
-                },
-                'q_head-128_kv_head-4_head-256': {
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (16, 16),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                },
-                'q_head-128_kv_head-1_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 8),
-                },
-                'q_head-8_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-32_kv_head-16_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (8, 32),
-                    'max_model_len-8192-sw-None': (8, 32),
-                },
-                'q_head-2_kv_head-1_head-256': {
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-2048-sw-None': (16, 64),
-                },
-                'q_head-2_kv_head-1_head-128': {
-                    'max_model_len-512-sw-None': (4, 128),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-2048-sw-None': (16, 128),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-128-sw-None': (1, 256),
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-1024-sw-None': (8, 128),
-                },
-                'q_head-8_kv_head-1_head-256': {
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-1_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-4_kv_head-2_head-128': {
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (4, 128),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 128),
-                },
-                'q_head-4_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-4096-sw-None': (32, 128),
-                },
-                'q_head-8_kv_head-4_head-128': {
-                    'max_model_len-512-sw-None': (4, 128),
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (8, 128),
-                    'max_model_len-2048-sw-None': (16, 128),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-8_kv_head-4_head-256': {
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-8192-sw-None': (32, 128),
-                },
-                'q_head-8_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                },
-                'q_head-32_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-128_kv_head-8_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-8_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                },
-                'q_head-16_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-4_kv_head-1_head-128': {
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-8192-sw-None': (32, 128),
-                    'max_model_len-2048-sw-None': (16, 128),
-                    'max_model_len-128-sw-None': (1, 128),
-                    'max_model_len-4096-sw-None': (32, 128),
-                    'max_model_len-256-sw-None': (2, 128),
-                    'max_model_len-512-sw-None': (4, 128),
-                },
-                'q_head-16_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-16_kv_head-8_head-128': {
-                    'max_model_len-8192-sw-None': (32, 64),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 64),
-                    'max_model_len-4096-sw-None': (32, 64),
-                },
-                'q_head-32_kv_head-1_head-128': {
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                },
-                'q_head-32_kv_head-8_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-4_head-256': {
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-128_kv_head-4_head-128': {
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (16, 16),
-                    'max_model_len-1024-sw-None': (8, 8),
-                },
-                'q_head-4_kv_head-1_head-256': {
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                },
-                'q_head-128_kv_head-1_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 8),
-                },
-                'q_head-32_kv_head-16_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (4, 16),
-                    'max_model_len-4096-sw-None': (4, 16),
-                    'max_model_len-8192-sw-None': (4, 16),
-                },
-                'q_head-64_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-128_kv_head-8_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-32_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-16_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                },
-                'q_head-16_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 64),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-128_kv_head-2_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 8),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-128_kv_head-16_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-32_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-64_kv_head-16_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-16_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 32),
-                    'max_model_len-256-sw-None': (2, 32),
-                    'max_model_len-512-sw-None': (4, 32),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 64),
-                },
-                'q_head-64_kv_head-32_head-128': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-128_kv_head-2_head-256': {
-                    'max_model_len-128-sw-None': (1, 8),
-                    'max_model_len-256-sw-None': (2, 8),
-                    'max_model_len-512-sw-None': (4, 8),
-                    'max_model_len-1024-sw-None': (8, 8),
-                    'max_model_len-2048-sw-None': (16, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-4_head-128': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 16),
-                    'max_model_len-2048-sw-None': (16, 16),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 16),
-                },
-                'q_head-16_kv_head-1_head-128': {
-                    'max_model_len-128-sw-None': (1, 64),
-                    'max_model_len-256-sw-None': (2, 64),
-                    'max_model_len-512-sw-None': (4, 64),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 32),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-                'q_head-32_kv_head-4_head-256': {
-                    'max_model_len-128-sw-None': (1, 16),
-                    'max_model_len-256-sw-None': (2, 16),
-                    'max_model_len-512-sw-None': (4, 16),
-                    'max_model_len-1024-sw-None': (8, 32),
-                    'max_model_len-2048-sw-None': (16, 32),
-                    'max_model_len-4096-sw-None': (32, 16),
-                    'max_model_len-8192-sw-None': (32, 32),
-                },
-            },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
         },
-        256: {
-            'q_bfloat16_kv_bfloat16': {
-                'q_head-2_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 64),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-2_kv_head-1_head-128': {
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (8, 128),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                },
-                'q_head-8_kv_head-4_head-256': {
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                    'max_model_len-256-sw-None': (1, 32),
-                },
-                'q_head-8_kv_head-4_head-128': {
-                    'max_model_len-2048-sw-None': (8, 128),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-256-sw-None': (1, 128),
-                },
-                'q_head-16_kv_head-2_head-256': {
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-16_head-256': {
-                    'max_model_len-2048-sw-None': (2, 16),
-                    'max_model_len-4096-sw-None': (2, 16),
-                    'max_model_len-8192-sw-None': (2, 16),
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (2, 16),
-                },
-                'q_head-32_kv_head-16_head-128': {
-                    'max_model_len-4096-sw-None': (4, 32),
-                    'max_model_len-8192-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (4, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                },
-                'q_head-64_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-128_kv_head-1_head-256': {
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                },
-                'q_head-128_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-32_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-16_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (4, 16),
-                    'max_model_len-4096-sw-None': (4, 16),
-                    'max_model_len-8192-sw-None': (4, 16),
-                },
-                'q_head-16_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-4_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (8, 128),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-128_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-64_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-128_kv_head-16_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-8_kv_head-2_head-256': {
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                },
-                'q_head-16_kv_head-2_head-128': {
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-8_head-256': {
-                    'max_model_len-4096-sw-None': (4, 32),
-                    'max_model_len-8192-sw-None': (4, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (4, 32),
-                },
-                'q_head-64_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-128_kv_head-1_head-128': {
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                },
-                'q_head-128_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                },
-                'q_head-8_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-16_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (2, 8),
-                    'max_model_len-2048-sw-None': (2, 8),
-                    'max_model_len-4096-sw-None': (2, 8),
-                    'max_model_len-8192-sw-None': (2, 8),
-                },
-                'q_head-16_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 64),
-                },
-                'q_head-4_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-32_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (2, 8),
-                    'max_model_len-2048-sw-None': (2, 8),
-                    'max_model_len-4096-sw-None': (2, 8),
-                    'max_model_len-8192-sw-None': (2, 8),
-                },
-                'q_head-16_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 64),
-                    'max_model_len-8192-sw-None': (16, 64),
-                },
-                'q_head-128_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-4_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-64_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-16_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-8_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-16_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (8, 64),
-                    'max_model_len-8192-sw-None': (8, 64),
-                },
-                'q_head-4_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-128_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                },
-                'q_head-32_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-16_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-8_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-1_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-128_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-32_kv_head-1_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (8, 32),
-                    'max_model_len-8192-sw-None': (8, 32),
-                },
-                'q_head-64_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (4, 16),
-                    'max_model_len-4096-sw-None': (4, 16),
-                    'max_model_len-8192-sw-None': (4, 16),
-                },
-            },
-            'q_bfloat16_kv_float8_e4m3fn': {
-                'q_head-2_kv_head-2_head-128': {
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 64),
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 128),
-                    'max_model_len-2048-sw-None': (8, 64),
-                },
-                'q_head-8_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-16_kv_head-2_head-256': {
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                },
-                'q_head-32_kv_head-2_head-128': {
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                },
-                'q_head-32_kv_head-16_head-128': {
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                    'max_model_len-256-sw-None': (1, 32),
-                },
-                'q_head-64_kv_head-8_head-256': {
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                },
-                'q_head-128_kv_head-2_head-256': {
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                    'max_model_len-256-sw-None': (1, 8),
-                },
-                'q_head-128_kv_head-8_head-128': {
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                },
-                'q_head-32_kv_head-16_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (4, 16),
-                    'max_model_len-4096-sw-None': (4, 16),
-                    'max_model_len-8192-sw-None': (4, 16),
-                },
-                'q_head-64_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-8_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 64),
-                    'max_model_len-8192-sw-None': (16, 64),
-                },
-                'q_head-2_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 64),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-128_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-32_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-16_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-4_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 128),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 128),
-                    'max_model_len-4096-sw-None': (16, 128),
-                    'max_model_len-8192-sw-None': (16, 128),
-                },
-                'q_head-16_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-128_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (8, 16),
-                },
-                'q_head-8_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-16_kv_head-2_head-128': {
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-8_head-256': {
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (8, 32),
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-8192-sw-None': (8, 32),
-                },
-                'q_head-64_kv_head-8_head-128': {
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 32),
-                },
-                'q_head-128_kv_head-4_head-256': {
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                },
-                'q_head-64_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 8),
-                },
-                'q_head-32_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-128_kv_head-16_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 8),
-                    'max_model_len-8192-sw-None': (8, 8),
-                },
-                'q_head-8_kv_head-2_head-128': {
-                    'max_model_len-256-sw-None': (1, 128),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-16_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-16_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-64_kv_head-32_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (4, 8),
-                    'max_model_len-4096-sw-None': (4, 8),
-                    'max_model_len-8192-sw-None': (4, 8),
-                },
-                'q_head-4_kv_head-2_head-256': {
-                    'max_model_len-256-sw-None': (1, 64),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 64),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 64),
-                },
-                'q_head-16_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 64),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 64),
-                },
-                'q_head-64_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 16),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-32_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 16),
-                    'max_model_len-512-sw-None': (2, 16),
-                    'max_model_len-1024-sw-None': (4, 16),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-16_kv_head-8_head-256': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-                'q_head-128_kv_head-4_head-128': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 8),
-                    'max_model_len-4096-sw-None': (8, 16),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-64_kv_head-4_head-256': {
-                    'max_model_len-256-sw-None': (1, 8),
-                    'max_model_len-512-sw-None': (2, 8),
-                    'max_model_len-1024-sw-None': (4, 8),
-                    'max_model_len-2048-sw-None': (8, 16),
-                    'max_model_len-4096-sw-None': (16, 8),
-                    'max_model_len-8192-sw-None': (16, 16),
-                },
-                'q_head-32_kv_head-8_head-128': {
-                    'max_model_len-256-sw-None': (1, 32),
-                    'max_model_len-512-sw-None': (2, 32),
-                    'max_model_len-1024-sw-None': (4, 32),
-                    'max_model_len-2048-sw-None': (8, 32),
-                    'max_model_len-4096-sw-None': (16, 32),
-                    'max_model_len-8192-sw-None': (16, 32),
-                },
-            },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
         },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-16_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-2_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 256
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-2_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-32_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-8_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      }
+    },
+    "q_bfloat16_kv_float8_e4m3fn": {
+      "q_head-128_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-2_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-2_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-32_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-128-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 32,
+            "num_q_per_block": 64
+          }
+        }
+      }
+    }
+  },
+  "16": {
+    "q_bfloat16_kv_bfloat16": {
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-16384-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 128,
+            "num_q_per_block": 256
+          },
+          "metadata": {
+            "benchmarking_method": "amortized",
+            "num_repeats": 5,
+            "samples_ns": [
+              49580.32,
+              48735.13,
+              48541.85,
+              48566.09,
+              48490.24
+            ]
+          },
+          "stats": {
+            "compile_time_s": 3.996254135010531,
+            "latency_avg_ns": 48782.725999999995,
+            "latency_std_ns": 455.2257769832469,
+            "lower_time_s": 1.1132908850267995
+          }
+        }
+      }
+    },
+    "q_bfloat16_kv_float8_e4m3fn": {
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-16384-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 128,
+            "num_q_per_block": 256
+          },
+          "metadata": {
+            "benchmarking_method": "amortized",
+            "num_repeats": 5,
+            "samples_ns": [
+              47639.12,
+              47237.96,
+              47272.48,
+              47128.33,
+              46967.09
+            ]
+          },
+          "stats": {
+            "compile_time_s": 3.849032800993882,
+            "latency_avg_ns": 47248.996,
+            "latency_std_ns": 248.44582071349265,
+            "lower_time_s": 1.1189253270276822
+          }
+        }
+      }
+    }
+  },
+  "256": {
+    "q_bfloat16_kv_bfloat16": {
+      "q_head-128_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-16_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-2_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-2_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-32_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-8_kv_head-1_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-1_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-64": {
+        "max_model_len-1024-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-128": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      }
+    },
+    "q_bfloat16_kv_float8_e4m3fn": {
+      "q_head-128_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-128_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-16_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-2_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-2_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-32_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-4_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-16_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-32_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-64_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 8
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-64_kv_head-8_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 16
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 16
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-16384-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 256
+          },
+          "metadata": {
+            "benchmarking_method": "amortized",
+            "num_repeats": 5,
+            "samples_ns": [
+              41086.44,
+              40656.51,
+              40476.99,
+              40642.71,
+              40569.06
+            ]
+          },
+          "stats": {
+            "compile_time_s": 3.6265507079660892,
+            "latency_avg_ns": 40686.342,
+            "latency_std_ns": 234.7634110546207,
+            "lower_time_s": 0.3320452229818329
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-2_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 32
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-128": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 128
+          }
+        }
+      },
+      "q_head-8_kv_head-4_head-256": {
+        "max_model_len-1024-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 4,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-2048-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 8,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-256-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 1,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-4096-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        },
+        "max_model_len-512-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 2,
+            "num_q_per_block": 32
+          }
+        },
+        "max_model_len-8192-sw-None": {
+          "config": {
+            "num_kv_pages_per_block": 16,
+            "num_q_per_block": 64
+          }
+        }
+      }
+    }
+  }
     },
     'TPU v6e': {
         128: {
