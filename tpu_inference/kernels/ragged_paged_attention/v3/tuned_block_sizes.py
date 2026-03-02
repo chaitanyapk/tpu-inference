@@ -1456,6 +1456,7 @@ TUNED_BLOCK_SIZES = {
                     'max_model_len-2048-sw-None': (8, 32),
                     'max_model_len-4096-sw-None': (16, 32),
                     'max_model_len-8192-sw-None': (16, 32),
+                    'max_model_len-16384-sw-None': (8, 256),
                 },
                 'q_head-64_kv_head-16_head-256': {
                     'max_model_len-256-sw-None': (1, 8),
